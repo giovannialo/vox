@@ -1,0 +1,30 @@
+{
+  "name": "giovannialo/vox",
+  "type": "project",
+  "minimum-stability": "stable",
+  "homepage": "https://github.com/giovannialo/vox",
+  "authors": [
+    {
+      "name": "Giovanni A. L. Oliveira",
+      "email": "giovanni.al.oliveira@gmail.com",
+      "homepage": "https://github.com/giovannialo"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "Source\\": "src/"
+    },
+    "files": [
+      "src/Boot/Config.php"
+    ]
+  },
+  "require": {
+    "php": "^8.1",
+    "crell/api-problem": "^3.6",
+    "guzzlehttp/guzzle": "^7.4",
+    "landkit/php8-dotenv": "^1.0",
+    "landkit/php8-functions": "^1.2",
+    "landkit/php8-model": "^1.0",
+    "landkit/php8-route": "^1.1"
+  }
+}

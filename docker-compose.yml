@@ -1,0 +1,30 @@
+version: '2'
+
+services:
+  api:
+    build:
+      context: .
+      dockerfile: api.Dockerfile
+      args:
+        PHP_VERSION: ${API_PHP_VERSION}
+    image: vox-api
+    container_name: vox-api
+    restart: always
+    volumes:
+      - "./usr/local/etc/php/php.ini-${API_PHP_INI}:${API_PHP_INI_DIR}/php.ini"
+      - "./api:/var/www/html"
+    networks:
+      - venus
+    environment:
+      VIRTUAL_HOST: ${API_VIRTUAL_HOST}
+      VIRTUAL_PORT: ${API_VIRTUAL_PORT}
+      LETSENCRYPT_HOST: ${API_LETSENCRYPT_HOST}
+      LETSENCRYPT_EMAIL: ${API_LETSENCRYPT_EMAIL}
+      TZ: ${API_TIMEZONE}
+    command: >
+      bash -c "php /usr/local/bin/composer install --no-interaction 
+      && apache2-foreground"
+
+networks:
+  venus:
+    external: true
