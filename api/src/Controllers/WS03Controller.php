@@ -52,7 +52,7 @@ class WS03Controller implements HttpResponseCodeInterface
             // Retornar resposta
             echo $problem->asJson();
 
-            // Finalizar script
+            // Finalizar execução
             exit;
         }
 

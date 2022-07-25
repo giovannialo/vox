@@ -4,7 +4,6 @@ use LandKit\Route\Route;
 use Source\Http\Middlewares\VerifyTokenMiddleware;
 use Source\Http\Middlewares\WS03RequiredFieldMiddleware;
 use Source\Http\Middlewares\WS04RequiredFieldMiddleware;
-use Source\Http\Middlewares\WS33RequiredQueryParamMiddleware;
 
 // Definir controlador
 Route::controller('Source\Controllers');
@@ -27,4 +26,4 @@ Route::post('/solicitacoes-documentos', 'WS04Controller:store', middleware: WS04
 Route::get('/gerar-dar', 'WS32Controller:index');
 
 // WS 33
-Route::get('/pagamentos', 'WS33Controller:index', middleware: WS33RequiredQueryParamMiddleware::class);
+Route::get('/pagamentos', 'WS33Controller:index');

@@ -34,7 +34,7 @@ class VerifyTokenMiddleware implements HttpResponseCodeInterface
             // Retornar resposta
             echo $problem->asJson();
 
-            // Finalizar script
+            // Finalizar execução
             exit;
         }
 
@@ -55,7 +55,7 @@ class VerifyTokenMiddleware implements HttpResponseCodeInterface
             // Retornar resposta
             echo $problem->asJson();
 
-            // Finalizar script
+            // Finalizar execução
             exit;
         }
 

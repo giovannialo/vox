@@ -55,7 +55,7 @@ class WS04Controller implements HttpResponseCodeInterface
             // Retornar resposta
             echo $problem->asJson();
 
-            // Finalizar script
+            // Finalizar execução
             exit;
         }
 

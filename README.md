@@ -53,16 +53,18 @@ API_LETSENCRYPT_EMAIL=email@exemplo.com
 Dentro da pasta **api** crie um arquivo com o nome **.env**, copie e cole o bloco de código abaixo e configure as variáveis.
 
 ```dotenv
-#
+# ### ### ### ### ### ### ### ### ### ###
 # Domínio
-#
+# ### ### ### ### ### ### ### ### ### ###
+
 HOST=vox.meudominio.com.br
 
-#
+# ### ### ### ### ### ### ### ### ### ###
 # Banco de dados
 # Para utilizar mais de um banco de dados, separe os valores com dois ponto-vírgula (;;).
 # Todas as variáveis, exceto DATABASE_OPTIONS, são de preenchimento obrigatório.
-#
+# ### ### ### ### ### ### ### ### ### ###
+
 DATABASE_KEY=default
 DATABASE_DRIVER=mysql
 DATABASE_HOST=localhost
@@ -72,13 +74,14 @@ DATABASE_USERNAME=user
 DATABASE_PASSWORD=user
 DATABASE_OPTIONS=1002=SET NAMES utf8mb4&3=2&19=5&8=0
 
-#
+# ### ### ### ### ### ### ### ### ### ###
 # Token cliente-servidor para web services
 # Para utilizar mais de um token, separe os valores com dois ponto-vírgula (;;).
 #
 # Token do cliente: é utilizado para validar a comunicação recebida dos web services.
 # Token do servidor: é utilizado para validar a comunicação enviada para os web services.
-#
+# ### ### ### ### ### ### ### ### ### ###
+
 WEB_SERVICE_TOKEN_CLIENT=secret
 WEB_SERVICE_TOKEN_SERVER=secret
 ```

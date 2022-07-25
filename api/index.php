@@ -59,7 +59,7 @@ if (Route::fail()) {
     // Retornar resposta
     echo $problem->asJson();
 
-    // Finalizar script
+    // Finalizar execução
     exit;
 }
 

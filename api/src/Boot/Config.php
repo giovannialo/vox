@@ -19,7 +19,7 @@ if (!DotEnv::load(__DIR__ . '/../../')) {
     // Retornar resposta
     echo (new ApiProblem('Error loading .env file.'))->setStatus(500)->asJson();
 
-    // Finalizar script
+    // Finalizar execução
     exit;
 }
 
@@ -65,7 +65,7 @@ if (!$databaseKey || !$databaseDriver || !$databaseHost || !$databasePort
         ->setStatus(HttpResponseCodeInterface::INTERNAL_SERVER_ERROR)
         ->asJson();
 
-    // Finalizar script
+    // Finalizar execução
     exit;
 }
 
@@ -95,7 +95,7 @@ foreach ($databaseKey as $i => $value) {
             ->setStatus(HttpResponseCodeInterface::INTERNAL_SERVER_ERROR)
             ->asJson();
 
-        // Finalizar script
+        // Finalizar execução
         exit;
     }
 
@@ -140,7 +140,7 @@ if (!$webServiceTokenClient || !$webServiceTokenServer) {
         ->setStatus(HttpResponseCodeInterface::INTERNAL_SERVER_ERROR)
         ->asJson();
 
-    // Finalizar script
+    // Finalizar execução
     exit;
 }
 
