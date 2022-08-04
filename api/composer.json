@@ -25,6 +25,7 @@
     "landkit/php8-dotenv": "^1.0",
     "landkit/php8-functions": "^1.2",
     "landkit/php8-model": "^1.0",
-    "landkit/php8-route": "^1.1"
+    "landkit/php8-route": "^1.1",
+    "ext-simplexml": "*"
   }
 }

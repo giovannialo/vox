@@ -22,6 +22,9 @@ class WS33Controller implements HttpResponseCodeInterface
 
         // Verificar se não houve parâmetro de consulta informado
         if (!$queryParams) {
+            // Definir código de resposta
+            http_response_code(self::INTERNAL_SERVER_ERROR);
+
             // Retornar resposta
             echo (new ApiProblem('A definir'))
                 ->setStatus(self::INTERNAL_SERVER_ERROR)
@@ -50,6 +53,9 @@ class WS33Controller implements HttpResponseCodeInterface
 
             // Verificar se o registro não foi encontrado
             if (!$findWs33) {
+                // Definir código de resposta
+                http_response_code(self::INTERNAL_SERVER_ERROR);
+
                 // Retornar resposta
                 echo (new ApiProblem('A definir'))
                     ->setStatus(self::INTERNAL_SERVER_ERROR)
@@ -62,12 +68,7 @@ class WS33Controller implements HttpResponseCodeInterface
 
             // Atualizar intervalo de datas
             $initialDate = date('dmY', strtotime('-2 days', strtotime($findWs33->criado_em)));
-            $finalDate = date('dmY', strtotime('-2 days', 'now'));
-
-            // Verificar se existe parâmetro para debuggar
-            if (isset($queryParams['debug'])) {
-                debug("{$initialDate} - {$finalDate}", $findWs33);
-            }
+            $finalDate = date('dmY', strtotime('-2 days', strtotime('now')));
         }
 
         // Preparar XML de consulta para o SIAT
@@ -92,10 +93,29 @@ class WS33Controller implements HttpResponseCodeInterface
                             </mensagem>
                         </urn:consultaPagamento>
                     </soapenv:Body>
-                    </soapenv:Envelope>';
+                </soapenv:Envelope>';
 
-        debug('oi');
         // Realizar consulta ao SIAT
-        (new Siat())->call($xml);
+        $consult = (new Siat())->call($xml);
+
+        // Obter resposta retornada pelo WS
+        $response = $consult->Body->consultaPagamentoResponse->return->Saida->SaidaConsultaPagamento->resposta;
+
+        // Verificar se a consulta não retornou o resultado esperado
+        if ($response === null || $response == 1) {
+            // Definir código de resposta
+            http_response_code(self::INTERNAL_SERVER_ERROR);
+
+            // Retornar resposta
+            echo (new ApiProblem('A definir'))
+                ->setStatus(self::INTERNAL_SERVER_ERROR)
+                ->setDetail('O que deverá acontecer se a consulta não retornar o resultado esperado?')
+                ->asJson();
+
+            // Finalizar execução
+            exit;
+        }
+
+        debug($consult->Body->ns2->return->Saida->SaidaConsultaPagamento->resposta);
     }
 }

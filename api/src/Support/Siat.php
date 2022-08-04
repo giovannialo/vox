@@ -2,10 +2,13 @@
 
 namespace Source\Support;
 
+use Crell\ApiProblem\ApiProblem;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
+use SimpleXMLElement;
+use Source\Http\Interfaces\HttpResponseCodeInterface;
 
-class Siat
+class Siat implements HttpResponseCodeInterface
 {
     private Client $client;
 
@@ -15,18 +18,18 @@ class Siat
     public function __construct()
     {
         $this->client = new Client([
-            'base_uri' => 'http://192.168.10.203:8080/dsf_mcz_gtm/services/WebServiceGTM',
-            'timeout' => 6,
+            'base_uri' => 'https://siat.maceio.al.gov.br/dsf_mcz_gtm/services/WebServiceGTM',
+            'timeout' => 7,
         ]);
     }
 
     /**
-     * Responsável por realizar uma consulta aos web services do Siat.
+     * Responsável por realizar consulta ao web service do Siat.
      *
      * @param string $xml
-     * @return void
+     * @return SimpleXMLElement
      */
-    public function call(string $xml): void
+    public function call(string $xml): SimpleXMLElement
     {
         try {
             // Realizar requisição
@@ -35,9 +38,27 @@ class Siat
                 'body' => $xml
             ]);
 
-            debug($response);
+            // Obter resposta
+            $xml = $response->getBody()->getContents();
+
+            // Tratar resposta
+            $xml = str_replace(['soap:', 'ns2:'], '', $xml);
+            $xml = utf8_encode(str_replace(['&lt;', '&gt;'], ['<', '>'], $xml));
+
+            // Retornar resposta em xml
+            return simplexml_load_string($xml);
         } catch (GuzzleException $e) {
-            debug($e);
+            // Definir código de resposta
+            http_response_code(self::INTERNAL_SERVER_ERROR);
+
+            // Retornar resposta
+            echo (new ApiProblem('A definir'))
+                ->setStatus(self::INTERNAL_SERVER_ERROR)
+                ->setDetail($e->getMessage())
+                ->asJson();
+
+            // Finalizar execução
+            exit;
         }
     }
 }
