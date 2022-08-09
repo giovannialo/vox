@@ -93,10 +93,10 @@ WEB_SERVICE_TOKEN_CLIENT=secret
 WEB_SERVICE_TOKEN_SERVER=secret
 
 # ### ### ### ### ### ### ### ### ### ###
-# Web Service do siat
+# Siat
 # ### ### ### ### ### ### ### ### ### ###
 
-WEB_SERVICE_SIAT_URL=siat.vox.meudominio.com.br
+SIAT_WEB_SERVICE_URL=siat.vox.meudominio.com.br
 ```
 
 ### Container
