@@ -18,7 +18,7 @@ class Siat implements HttpResponseCodeInterface
     public function __construct()
     {
         $this->client = new Client([
-            'base_uri' => 'https://siat.maceio.al.gov.br/dsf_mcz_gtm/services/WebServiceGTM',
+            'base_uri' => CONF_SIAT_WEB_SERVICE_URL,
             'timeout' => 7,
         ]);
     }

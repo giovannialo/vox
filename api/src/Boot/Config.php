@@ -7,7 +7,7 @@ use Source\Http\Interfaces\HttpResponseCodeInterface;
 
 /* *** *** *** *** *** *** *** *** *** ***
  *
- *  Variáveis de ambiente
+ * Variáveis de ambiente
  *
  * *** *** *** *** *** *** *** *** *** ***/
 
@@ -130,7 +130,7 @@ define('CONF_DATABASE', $database);
 $webServiceTokenClient = getenv('WEB_SERVICE_TOKEN_CLIENT');
 $webServiceTokenServer = getenv('WEB_SERVICE_TOKEN_SERVER');
 
-// Verificar se alguma variável está vazia
+// Verificar se alguma variável de token está vazia
 if (!$webServiceTokenClient || !$webServiceTokenServer) {
     // Definir código de resposta
     http_response_code(HttpResponseCodeInterface::INTERNAL_SERVER_ERROR);
@@ -151,3 +151,30 @@ $webServiceTokenServer = explode(';;', $webServiceTokenServer);
 // Definir constantes com configuração dos tokens
 define('CONF_WEB_SERVICE_TOKEN_CLIENT', $webServiceTokenClient);
 define('CONF_WEB_SERVICE_TOKEN_SERVER', $webServiceTokenServer);
+
+
+/* *** *** *** *** *** *** *** *** *** ***
+ *
+ * Siat
+ *
+ * *** *** *** *** *** *** *** *** *** ***/
+
+// Obter as variáveis de ambiente
+$siatWebServiceUrl = getenv('SIAT_WEB_SERVICE_URL');
+
+// Verificar se a URL do web service está vazia
+if (!$siatWebServiceUrl) {
+    // Definir código de resposta
+    http_response_code(HttpResponseCodeInterface::INTERNAL_SERVER_ERROR);
+
+    // Retornar resposta
+    echo (new ApiProblem('Error loading web service url configuration.'))
+        ->setStatus(HttpResponseCodeInterface::INTERNAL_SERVER_ERROR)
+        ->asJson();
+
+    // Finalizar execução
+    exit;
+}
+
+// Definir constante com URL do web service
+define('CONF_SIAT_WEB_SERVICE_URL', $siatWebServiceUrl);

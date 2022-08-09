@@ -28,6 +28,7 @@ CREATE TABLE IF NOT EXISTS comunicacao
   ws                          INT(2)      NOT NULL,
   json                        JSON        NOT NULL,
   controle_orgao_id           INT(4)      NOT NULL,
+  documento_cnpj              CHAR(14)    NOT NULL,
   documento_protocolo_redesim CHAR(13)    NOT NULL,
   documento_tipo_modelo       INT         NOT NULL,
   documento_situacao          INT         NOT NULL DEFAULT 0,
@@ -37,7 +38,8 @@ CREATE TABLE IF NOT EXISTS comunicacao
 
   PRIMARY KEY (id)
 ) ENGINE = InnoDB
-  DEFAULT CHARSET utf8mb4;
+  DEFAULT CHARSET utf8mb4
+  COLLATE utf8mb4_unicode_ci;
 
 # DROP TABLE IF EXISTS ws32;
 CREATE TABLE IF NOT EXISTS ws32
@@ -51,7 +53,8 @@ CREATE TABLE IF NOT EXISTS ws32
 
   PRIMARY KEY (id)
 ) ENGINE = InnoDB
-  DEFAULT CHARSET utf8mb4;
+  DEFAULT CHARSET utf8mb4
+  COLLATE utf8mb4_unicode_ci;
 
 # DROP TABLE IF EXISTS ws33;
 CREATE TABLE IF NOT EXISTS ws33
@@ -63,4 +66,6 @@ CREATE TABLE IF NOT EXISTS ws33
 
   PRIMARY KEY (id)
 ) ENGINE = InnoDB
-  DEFAULT CHARSET utf8mb4;
+  DEFAULT CHARSET utf8mb4
+  COLLATE utf8mb4_unicode_ci;
+

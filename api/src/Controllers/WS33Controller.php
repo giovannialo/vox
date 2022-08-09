@@ -2,11 +2,11 @@
 
 namespace Source\Controllers;
 
-use Crell\ApiProblem\ApiProblem;
 use LandKit\Route\Route;
 use Source\Http\Interfaces\HttpResponseCodeInterface;
 use Source\Models\WS33Model;
 use Source\Support\Siat;
+use Source\Support\Vox;
 
 class WS33Controller implements HttpResponseCodeInterface
 {
@@ -21,22 +21,18 @@ class WS33Controller implements HttpResponseCodeInterface
         $queryParams = Route::getQueryParams();
 
         // Verificar se não houve parâmetro de consulta informado
-        if (!$queryParams) {
-            // Definir código de resposta
-            http_response_code(self::INTERNAL_SERVER_ERROR);
-
-            // Retornar resposta
-            echo (new ApiProblem('A definir'))
-                ->setStatus(self::INTERNAL_SERVER_ERROR)
-                ->setDetail('O que deverá acontecer se nenhum parâmetro for informado?')
-                ->asJson();
-
-            // Finalizar execução
-            exit;
+        if (!isset($queryParams['nu_convenio'])) {
+            // Retornar erro
+            Vox::apiProblem(
+                'Query parameters not informed.',
+                self::BAD_REQUEST,
+                9003,
+                'Este valor não deve ser nulo. nu_convenio'
+            );
         }
 
         // Obter parâmetros de consulta
-        $agreement = $queryParams['nu_convenio'] ?? null;
+        $agreement = $queryParams['nu_convenio'];
         $guide = $queryParams['nu_nosso_numero'] ?? null;
 
         // Declarar variáveis de intervalo de datas
@@ -53,17 +49,8 @@ class WS33Controller implements HttpResponseCodeInterface
 
             // Verificar se o registro não foi encontrado
             if (!$findWs33) {
-                // Definir código de resposta
-                http_response_code(self::INTERNAL_SERVER_ERROR);
-
-                // Retornar resposta
-                echo (new ApiProblem('A definir'))
-                    ->setStatus(self::INTERNAL_SERVER_ERROR)
-                    ->setDetail('O que deverá acontecer se nenhum registro for encontrado?')
-                    ->asJson();
-
-                // Finalizar execução
-                exit;
+                // Retornar erro
+                Vox::apiProblem('Agreement not found.', self::NOT_FOUND, 9011, 'Registro não encontrado');
             }
 
             // Atualizar intervalo de datas
@@ -96,26 +83,51 @@ class WS33Controller implements HttpResponseCodeInterface
                 </soapenv:Envelope>';
 
         // Realizar consulta ao SIAT
-        $consult = (new Siat())->call($xml);
+        $siat = (new Siat())->call($xml);
 
         // Obter resposta retornada pelo WS
-        $response = $consult->Body->consultaPagamentoResponse->return->Saida->SaidaConsultaPagamento->resposta;
+        $response = $siat->Body->consultaPagamentoResponse->return->Saida->SaidaConsultaPagamento->resposta;
 
         // Verificar se a consulta não retornou o resultado esperado
-        if ($response === null || $response == 1) {
-            // Definir código de resposta
-            http_response_code(self::INTERNAL_SERVER_ERROR);
-
-            // Retornar resposta
-            echo (new ApiProblem('A definir'))
-                ->setStatus(self::INTERNAL_SERVER_ERROR)
-                ->setDetail('O que deverá acontecer se a consulta não retornar o resultado esperado?')
-                ->asJson();
-
-            // Finalizar execução
-            exit;
+        if ($response != 3) {
+            // Verificar se foi utilizado nu_nosso_numero
+            if ($guide) {
+                // Retornar erro
+                Vox::apiProblem('Payment not found.', self::NOT_FOUND, 9919, 'Nosso número inexistente', $guide);
+            } else {
+                // Retornar erro
+                Vox::apiProblem('Payment not found.', self::NOT_FOUND, 9005, 'Registro não encontrado');
+            }
         }
 
-        debug($consult->Body->ns2->return->Saida->SaidaConsultaPagamento->resposta);
+        // Salvar comunicação na base de dados
+        if ($initialDate && $finalDate && $initialDate != '22032028') {
+            $ws33 = new WS33Model();
+            $ws33->orgao = $agreement;
+            $ws33->consulta = $guide;
+            $ws33->save();
+
+            // Verificar se ocorreu erro ao salvar dados na base de dados
+            if ($ws33->fail()) {
+                // Retornar erro
+                Vox::apiProblem('Error saving data to database.', self::INTERNAL_SERVER_ERROR, 9020, 'Erro interno');
+            }
+        }
+
+        // Declarar variável que irá guardar os dados do pagamento
+        $payments = [];
+
+        // Organizar dados
+        foreach ($siat->Body->consultaPagamentoResponse->return->Saida->SaidaConsultaPagamento->DadosPagamento as $payment) {
+            $payments['pagamentos'][] = [
+                'nu_nosso_numero' => $guide,
+                'nu_valor_pago' => (float) $payment->valorPago,
+                'dt_pagamento' => (string) $payment->dataPagamento,
+                'co_autenticacao' => (string) $payment->codigoBarras
+            ];
+        }
+
+        // Retornar pagamentos
+        echo json_encode($payments);
     }
 }

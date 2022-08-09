@@ -18,6 +18,7 @@ class CommunicationModel extends Model
         'ws',
         'json',
         'controle_orgao_id',
+        'documento_cnpj',
         'documento_protocolo_redesim',
         'documento_tipo_modelo',
         'documento_situacao',

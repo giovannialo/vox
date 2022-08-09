@@ -20,6 +20,13 @@ Na raiz do projeto crie um arquivo com o nome **.env**, copie e cole o bloco de 
 
 ```dotenv
 # ### ### ### ### ### ### ### ### ### ###
+# Aplicação
+# ### ### ### ### ### ### ### ### ### ###
+
+# Pasta onde encontra-se a aplicação
+API_DIR=./api
+
+# ### ### ### ### ### ### ### ### ### ###
 # PHP
 # ### ### ### ### ### ### ### ### ### ###
 
@@ -84,6 +91,12 @@ DATABASE_OPTIONS=1002=SET NAMES utf8mb4&3=2&19=5&8=0
 
 WEB_SERVICE_TOKEN_CLIENT=secret
 WEB_SERVICE_TOKEN_SERVER=secret
+
+# ### ### ### ### ### ### ### ### ### ###
+# Web Service do siat
+# ### ### ### ### ### ### ### ### ### ###
+
+WEB_SERVICE_SIAT_URL=siat.vox.meudominio.com.br
 ```
 
 ### Container
