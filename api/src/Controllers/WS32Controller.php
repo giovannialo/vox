@@ -325,7 +325,7 @@ class WS32Controller implements HttpResponseCodeInterface
             'nu_nosso_numero' => (string) $guideDam->codigoGuiaDam,
             'nu_linha_digitavel' => (string) $guideDam->linhaDigitavel,
             'nu_representacao_numerica' => (string) $guideDam->codigoBarras,
-            'dt_vencimento' => (string) $guideDam->vencimento,
+            'dt_vencimento' => date_format(date_create(substr($guideDam->codigoBarras, 19, 8)), 'Y-m-d'),
             'ds_url_taxa' => (string) $guideDam->arquivo
         ];
 

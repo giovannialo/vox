@@ -19,7 +19,7 @@ class Siat implements HttpResponseCodeInterface
     {
         $this->client = new Client([
             'base_uri' => CONF_SIAT_WEB_SERVICE_URL,
-            'timeout' => 7,
+            'timeout' => 10,
         ]);
     }
 
@@ -52,7 +52,7 @@ class Siat implements HttpResponseCodeInterface
             http_response_code(self::INTERNAL_SERVER_ERROR);
 
             // Retornar resposta
-            echo (new ApiProblem('A definir'))
+            echo (new ApiProblem('An error occurred while trying to communicate with SIAT Web Services.'))
                 ->setStatus(self::INTERNAL_SERVER_ERROR)
                 ->setDetail($e->getMessage())
                 ->asJson();
